@@ -42,7 +42,6 @@ const serializeEvent = (event, joinCount = 0) => ({
   organizerEmail: event.organizerEmail || 'Change Together community',
   joinCount,
 })
-
 async function getJoinCounts(eventIds) {
   if (eventIds.length === 0) return new Map()
 
