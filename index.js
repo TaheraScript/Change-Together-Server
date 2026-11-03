@@ -264,6 +264,32 @@ app.get('/my-events', async (req, res) => {
   res.send(joinedEvents)
 })
 
+app.patch('/events/:id',async(req,res)=>{
+  const id = req.params.id
+  const updateData = req.body
+
+  const result = await createEventCollection.updateOne(
+    {_id: new ObjectId(id)},
+    {$set: updateData}
+  )
+  res.send(result)
+})
+
+app.get('/events/:id',async(req,res)=>{
+  const id = req.params.id
+  const query = {_id: new ObjectId(id)}
+  const result = await createEventCollection.findOne(query)
+   res.send(result)
+})
+
+app.delete('/events/:id',async(req,res)=>{
+  const id = req.params.id
+  const query = {_id: new ObjectId(id)}
+  const result = await createEventCollection.deleteOne(query)
+   res.send(result)
+})
+
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -277,3 +303,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+export default app
