@@ -62,7 +62,16 @@ await joinCollection.createIndex(
 )
 await createEventCollection.createIndex({ date: 1 })
 
-app.post('/create-event', async (req, res) => {
+const verifyApi =(req,res,next)=>{
+  const authHeader = req.headers.authorization
+  if(authHeader !== 'user logged in '){
+    return res.status(401).send({msg:'Unauthirized'})
+  }
+  console.log('middleware')
+  next()
+}
+
+app.post('/create-event',verifyApi, async (req, res) => {
   const data = req.body ?? {}
   const requiredFields = [
     'title',
@@ -133,7 +142,7 @@ app.get('/events/:id', async (req, res) => {
   res.send(serializeEvent(event, joinCount))
 })
 
-app.get('/events/:id/join', async (req, res) => {
+app.get('/events/:id/join',verifyApi, async (req, res) => {
   const eventId = toObjectId(req.params.id)
   if (!eventId) {
     return res.status(404).json({ message: 'Event not found.' })
@@ -263,7 +272,7 @@ app.get('/my-events', async (req, res) => {
   res.send(joinedEvents)
 })
 
-app.patch('/events/:id',async(req,res)=>{
+app.patch('/events/:id',verifyApi,async(req,res)=>{
   const id = req.params.id
   const updateData = req.body
 
@@ -274,7 +283,7 @@ app.patch('/events/:id',async(req,res)=>{
   res.send(result)
 })
 
-app.get('/events/:id',async(req,res)=>{
+app.get('/events/:id',verifyApi,async(req,res)=>{
   const id = req.params.id
   const query = {_id: new ObjectId(id)}
   const result = await createEventCollection.findOne(query)
