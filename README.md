@@ -5,6 +5,7 @@
 Change Together Events API is a RESTful backend built with Express.js and MongoDB. It handles community event management and volunteer participation by providing API endpoints for creating, retrieving, updating, and deleting events. It also manages volunteer registrations and integrates with the Next.js client as a fallback data source when the primary database routes are unavailable.
 
 🔗 **Local API Base URL:** `http://localhost:5000`
+
 ## ✨ Key Features
 
 1. **📅 Event Creation & Management** — Create, update, and delete community events with server-side validation. Only the original event organizer can modify or cancel their own events.
