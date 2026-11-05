@@ -65,13 +65,13 @@ Follow these steps to run the backend locally.
 **1. Clone the repository**
 
 ```bash
-git clone YOUR_SERVER_REPOSITORY_URL
+git clone [Change-Together](https://github.com/TaheraScript/Change-Together-Server)
 ```
 
 **2. Navigate to the project directory**
 
 ```bash
-cd YOUR_SERVER_PROJECT_FOLDER
+cd  [Change-Together](https://github.com/TaheraScript/Change-Together-Server)
 ```
 
 **3. Install dependencies**
