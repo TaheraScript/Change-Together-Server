@@ -1,185 +1,139 @@
- Server README.md (paste into the Express project root):
+# 🌱 Change Together — Events API
 
-  # Change Together — Events API
+**Powering community connections through a reliable event management API.**
 
-    The Express + MongoDB backend for **Change Together**. It stores community
-    events and volunteer joins, and exposes a small REST API that the Next.js
-    client reads from as a fallback when the app's own database routes are
-    unavailable.
+Change Together Events API is a RESTful backend built with Express.js and MongoDB. It handles community event management and volunteer participation by providing API endpoints for creating, retrieving, updating, and deleting events. It also manages volunteer registrations and integrates with the Next.js client as a fallback data source when the primary database routes are unavailable.
 
-    **Base URL (local):** http://localhost:5000
+🔗 **Local API Base URL:** `http://localhost:5000`
 
-    ## ✨ What it does
+## ✨ Key Features
 
-    - **Creates, updates and deletes events** — writes are protected by a 
-  Better
-      Auth JWT, and only the organiser (`organizerEmail` from the verified 
-  token)
-      can change or cancel their own event.
-    - **Lists upcoming events** — every event whose date is today or later, 
-  sorted
-      by date.
-    - **Stores joins** — a join is saved with a snapshot of both the user and 
-  the
-      event, guarded by a unique `{eventId, user.email}` index so a volunteer 
-  can
-      join an event only once.
-    - **Returns a user's joined events** — all events a signed-in volunteer 
-  joined,
-      sorted by event date.
-    - **Validates everything server-side** — title, description, type, 
-  location,
-      thumbnail URL and a strictly future event date.
+1. **📅 Event Creation & Management** — Create, update, and delete community events with server-side validation. Only the original event organizer can modify or cancel their own events.
 
-    ## 🛠 Tech stack
+2. **🌍 Upcoming Events Discovery** — Retrieve all upcoming community events, automatically filtering out past events and sorting results by event date.
 
-    - **Express** (REST API)
-    - **MongoDB** (native driver, `change-together` database)
-    - **JWT verification** with `jose` against the client's JWKS
-    - **JavaScript**
+3. **🤝 Volunteer Participation** — Allow authenticated users to join community events. Each participation record stores a snapshot of both user and event information.
 
-    ## 📜 Endpoints
+4. **🔒 Secure API Authentication** — Protect sensitive API endpoints using Better Auth JWT tokens. Tokens are verified against the client's JWKS to validate signatures, expiration, issuer, and audience.
 
-    | Method | Endpoint | Auth | Description |
-    | --- | --- | --- | --- |
-    | POST | `/create-event` | JWT | Create an event |
-    | GET | `/upcoming-events` | Public | All upcoming events |
-    | GET | `/events/:id` | Public | A single event + join count |
-    | GET | `/events/:id/join` | Optional | Join count (+ your join status 
-  when signed in) |
-    | POST | `/events/:id/join` | JWT | Join an event |
-    | GET | `/my-events` | JWT | Events you joined, sorted by date |
-    | PATCH | `/events/:id` | JWT | Update your event |
-    | DELETE | `/events/:id` | JWT | Cancel your event |
+5. **📋 Joined Events Tracking** — Retrieve all events joined by a specific authenticated user, sorted by event date.
 
-    Protected routes expect `Authorization: Bearer <JWT>` issued by the 
-  Next.js
-    app's Better Auth `jwt()` plugin. Tokens are verified against the client's
-    JWKS (signature, expiry, issuer, audience).
+6. **🛡️ Organizer Authorization** — Ensure that only the event organizer, verified through their authenticated email, can update or delete their own events.
 
-    ## 🚀 Getting started
+7. **✅ Server-side Data Validation** — Validate event titles, descriptions, event types, locations, thumbnail URLs, and future event dates before storing data.
 
-    ```bash
-    npm install
-    node index.js   # or: npm run dev
-    ```
+8. **🔁 Duplicate Join Prevention** — Use a unique MongoDB index on `{ eventId, user.email }` to prevent users from joining the same event more than once.
 
-    ### Environment variables
+## 🧰 Technologies Used
 
-    Create a `.env` with:
+| Category | Technologies |
+|---|---|
+| Backend Framework | Express.js |
+| Language | JavaScript |
+| Database | MongoDB (Native Driver) |
+| Authentication | Better Auth JWT |
+| Token Verification | jose (JWKS) |
+| API Architecture | REST API |
 
-    ```bash
-    MONGODB_URI=your-mongodb-connection-string
-    PORT=5000
+## 📜 API Endpoints
 
-    # JWKS of the Next.js client (defaults to
-  http://localhost:3000/api/auth/jwks)
-    JWKS_URL=http://localhost:3000/api/auth/jwks
-    ```
+The following endpoints are available for managing community events and volunteer participation.
 
-    ## 🔐 Notes
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/create-event` | Private | Create a new event |
+| GET | `/upcoming-events` | Public | Retrieve all upcoming events |
+| GET | `/events/:id` | Public | Retrieve event details and join count |
+| GET | `/events/:id/join` | Optional | Retrieve join count and user's join status |
+| POST | `/events/:id/join` | Private | Join an event |
+| GET | `/my-events` | Private | Retrieve events joined by the authenticated user |
+| PATCH | `/events/:id` | Private | Update an organized event |
+| DELETE | `/events/:id` | Private | Cancel an organized event |
 
-    - The API shares the `change-together` database with the client, using the
-      `create-event` and `event-joins` collections.
-    - CORS is enabled so the Next.js client can call the API from a different
-      origin.
+**Authentication:** Protected endpoints require a JWT access token in the request header.
 
+```http
+Authorization: Bearer <JWT>
+```
 
+The JWT is issued by the Next.js client's Better Auth `jwt()` plugin and verified using the client's JWKS endpoint.
 
+## 🚀 Getting Started
 
-  One thing to fix before you publish: both files use
-  https://your-live-site.vercel.app as the live URL placeholder — swap in your
-   actual deployed client URL (the server README intentionally shows the local
-   base URL, since the Express API usually isn't public).
+Follow these steps to run the backend locally.
 
-❯ give for server side to add on readme.md file 
+**1. Clone the repository**
 
-✻ Thought for 1 second [ctrl+o to expand]
+```bash
+git clone YOUR_SERVER_REPOSITORY_URL
+```
 
-⠶ Here's the server-side README.md — copy the whole block into the Express
-  project's README.md:
+**2. Navigate to the project directory**
 
-  # Change Together — Events API
+```bash
+cd YOUR_SERVER_PROJECT_FOLDER
+```
 
-    The Express + MongoDB backend for **Change Together**. It stores community
-    events and volunteer joins, and exposes a small REST API that the Next.js
-    client reads from as a fallback when the app's own database routes are
-    unavailable.
+**3. Install dependencies**
 
-    **Base URL (local):** http://localhost:5000
+```bash
+npm install
+```
 
-    ## ✨ What it does
+**4. Configure environment variables**
 
-    - **Creates, updates and deletes events** — writes are protected by a 
-  Better
-      Auth JWT, and only the organiser (`organizerEmail` from the verified 
-  token)
-      can change or cancel their own event.
-    - **Lists upcoming events** — every event whose date is today or later, 
-  sorted
-      by date.
-    - **Stores joins** — a join is saved with a snapshot of both the user and 
-  the
-      event, guarded by a unique `{eventId, user.email}` index so a volunteer 
-  can
-      join an event only once.
-    - **Returns a user's joined events** — all events a signed-in volunteer 
-  joined,
-      sorted by event date.
-    - **Validates everything server-side** — title, description, type, 
-  location,
-      thumbnail URL and a strictly future event date.
+Create a `.env` file in the project root and add the following variables:
 
-    ## 🛠 Tech stack
+```env
+MONGODB_URI=your-mongodb-connection-string
+PORT=5000
 
-    - **Express** (REST API)
-    - **MongoDB** (native driver, `change-together` database)
-    - **JWT verification** with `jose` against the client's JWKS
-    - **JavaScript**
+# JWKS endpoint of the Next.js client
+JWKS_URL=http://localhost:3000/api/auth/jwks
+```
 
-    ## 📜 Endpoints
+**5. Start the server**
 
-    | Method | Endpoint | Auth | Description |
-    | --- | --- | --- | --- |
-    | POST | `/create-event` | JWT | Create an event |
-    | GET | `/upcoming-events` | Public | All upcoming events |
-    | GET | `/events/:id` | Public | A single event + join count |
-    | GET | `/events/:id/join` | Optional | Join count (+ your join status 
-  when signed in) |
-    | POST | `/events/:id/join` | JWT | Join an event |
-    | GET | `/my-events` | JWT | Events you joined, sorted by date |
-    | PATCH | `/events/:id` | JWT | Update your event |
-    | DELETE | `/events/:id` | JWT | Cancel your event |
+```bash
+node index.js
+```
 
-    Protected routes expect `Authorization: Bearer <JWT>` issued by the 
-  Next.js
-    app's Better Auth `jwt()` plugin. Tokens are verified against the client's
-    JWKS (signature, expiry, issuer, audience).
+If your project includes a development script, you can also use:
 
-    ## 🚀 Getting started
+```bash
+npm run dev
+```
 
-    ```bash
-    npm install
-    node index.js   # or: npm run dev
-    ```
+The API will be available at:
 
-    ### Environment variables
+`http://localhost:5000`
 
-    Create a `.env` with:
+## 🗄️ Database Structure
 
-    ```bash
-    MONGODB_URI=your-mongodb-connection-string
-    PORT=5000
+The backend uses MongoDB and shares the `change-together` database with the Next.js client.
 
-    # JWKS of the Next.js client (defaults to
-  http://localhost:3000/api/auth/jwks)
-    JWKS_URL=http://localhost:3000/api/auth/jwks
-    ```
+| Collection | Purpose |
+|---|---|
+| `create-event` | Stores community event information |
+| `event-joins` | Stores volunteer participation records |
 
-    ## 🔐 Notes
+## 🔐 Additional Notes
 
-    - The API shares the `change-together` database with the client, using the
-      `create-event` and `event-joins` collections.
-    - CORS is enabled so the Next.js client can call the API from a different
-      origin.
+- **Database Integration:** The backend uses the MongoDB native driver to manage event and volunteer participation data.
+- **JWT Verification:** Protected routes verify Better Auth JWT tokens through the Next.js client's JWKS endpoint.
+- **Event Ownership:** Only the authenticated organizer can update or delete their own events.
+- **CORS Configuration:** CORS is enabled to allow the Next.js frontend to communicate with the Express API from a different origin.
+- **Duplicate Prevention:** A unique compound index prevents duplicate volunteer registrations for the same event.
 
+## 🔗 Relevant Links
+
+- 🌐 **Frontend Live Demo:** [Change Together](https://change-together.vercel.app/)
+- 💻 **Frontend Repository:** [Change Together](https://github.com/TaheraScript/Change-Together)
+- ⚡ **Express.js:** [expressjs.com](https://expressjs.com/)
+- 🍃 **MongoDB:** [mongodb.com](https://www.mongodb.com/)
+- 🔐 **Better Auth:** [better-auth.com](https://www.better-auth.com/)
+- 🔑 **jose:** [github.com/panva/jose](https://github.com/panva/jose)
+
+---
+
+**Built with ❤️ to support meaningful community initiatives.**
